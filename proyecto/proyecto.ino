@@ -1,6 +1,7 @@
 #include<stdlib.h> //Double to String Float
 //
 int cont_m;
+int medida_finalizada;
 //int s1=3;
 //int s2=4;
 int motor1=5;
@@ -67,16 +68,18 @@ void setup() {
   //
   cont_m=0;
   valor_velocidad=20;
+  s_pwm="0";
   //digitalWrite(s1,HIGH);
   //
   fl_i1=0;
   fl_i2=0;
   giros=0;
-  sg=String(giros);
+  sg="0";
+  sm="0";
   medida1=0;
-  medida_length=6;
-  medida_string="";
-  cte=3.5; //3.5 cm
+  medida_length=5;
+  medida_string="00.00";
+  cte=0.635; //0.635 cm
   //
   flag_ppm=0;
   ppm1=ppm2=0;
@@ -93,6 +96,7 @@ void setup() {
   lux2="0000";
   //
   analog_length=4;
+  medida_finalizada=0;
   
 }
 
@@ -119,7 +123,7 @@ void loop() {
   }
   //digitalWrite(motor1,pwm1);
   s_pwm=String(pwm1);
-  //
+  //*******************************
   ir1=digitalRead(pin_ir1);
   ir2=digitalRead(pin_ir2);
   if(ir2==HIGH){
@@ -131,9 +135,12 @@ void loop() {
   }else{
     if(fl_i2==1){
       medida1=(((float)giros)*cte);
-      giros=0;
       dtostrf(medida1,medida_length-3,2,medida2);
+      if(giros>0){
       medida_string=medida2;
+      medida_finalizada=1;
+      }
+      giros=0;
       sg=String(giros);
       fl_i1=0;
       fl_i2=0;
@@ -151,7 +158,7 @@ void loop() {
       fl_i1=2;
     }
   }
-  //
+  //*******************************
   if(flag_analog==0){
     flag_analog=1;
     t=analogRead(A1);
@@ -229,9 +236,12 @@ void loop() {
   Serial.print(termo2+" ");
   Serial.print(lux2+" ");
   Serial.print(string_ppm+" ");
-  Serial.print(medida_string);
-  Serial.print(" "+sg);
-  Serial.print(" "+sm);
-  Serial.print(" "+s_pwm);
+  Serial.print(medida_string+" ");
+  Serial.print(sm+" ");
+  Serial.print(sg+" ");
+  Serial.print(s_pwm+" ");
   Serial.println("");
+  if(medida_finalizada==1){
+    //delay(500);  
+  }
 }

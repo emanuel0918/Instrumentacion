@@ -12,6 +12,7 @@ int valor_velocidad;
 float paros;
 int paros2;
 int cuenta_segundos;
+String pwm_string;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -21,7 +22,7 @@ void setup() {
   //
   cont_m=0;
   valor_velocidad=20;
-  
+  pwm_string="0";
 }
 
 void loop() {
@@ -35,6 +36,7 @@ void loop() {
   pwm1=map(valor_pwm,0,1023,0,valor_velocidad);
   paros= (((float)(valor_velocidad))/((float)(pwm1)));
   paros2=(int)paros;
+  pwm_string=String(pwm1);
   if(cont_m>=valor_velocidad){
     cont_m=0;
   }else{
@@ -45,4 +47,5 @@ void loop() {
     }
     cont_m++;
   }
+  Serial.println(pwm_string);
 }
